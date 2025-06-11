@@ -5,7 +5,7 @@ import Navbar from "../components/Navbar";
 import { localizer } from '../../helpers/calendarLocalizer';
 import { getMessagesES } from '../../helpers/getMessages';
 import { CalendarEvent } from '../components/CalendarEvent';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CalendarModal } from '../components/CalendarModal';
 import { useUiStore } from '../../hooks/useUiStore';
 import { useCalendarStore } from '../../hooks/useCalendarStore';
@@ -20,7 +20,7 @@ import { FabDelete } from '../components/FabDelete';
 export const CalendarPage = () => {
 
   const { openDateModal } = useUiStore();
-  const { events, setActiveEvent } = useCalendarStore();
+  const { events, setActiveEvent, startLoadingEvents } = useCalendarStore();
 
 
   const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'week');
@@ -55,11 +55,12 @@ export const CalendarPage = () => {
     localStorage.setItem('lastView', event);
     setLastView( event );
 
-
-
   }
 
-
+  useEffect(() => {
+    startLoadingEvents();
+  }, [])
+  
 
 
   return (

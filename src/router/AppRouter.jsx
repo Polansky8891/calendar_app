@@ -1,21 +1,53 @@
 import { Navigate, Route, Routes } from "react-router"
 import { CalendarPage } from "../calendar/pages/CalendarPage";
 import { LoginPage } from "../auth/pages/LoginPage";
+import { getEnvVariables } from "../helpers/getEnvVariables";
+import { useAuthStore } from "../hooks/useAuthStore";
+import { useEffect } from "react";
 
 
 
 const AppRouter = () => {
 
-    const authStatus = 'authenticated';
+  const { status, checkAuthToken } = useAuthStore();
+
+  useEffect(() => {
+    checkAuthToken();
+  
+  }, [])
+  
+
+  if ( status === 'checking' ) {
+    return (
+      <h3>Cargando...</h3>
+    )
+  }
+
+  //const authStatus = 'not-authenticated';
+
   return (
     <Routes>
         {
-            (authStatus === 'not-authenticated')
-            ? <Route path='/auth/*' element={ <LoginPage /> } />
-            : <Route path='/*' element={ <CalendarPage /> } />
+            (status === 'not-authenticated')
+            ? (
+                <>
+                  <Route path='/auth/*' element={ <LoginPage /> } />
+                  <Route path='/*' element={ <Navigate to='/auth/login' />} />
+                </>
+            ) 
+            : (
+                <>
+                  <Route path='/' element={ <CalendarPage /> } />
+                  <Route path='/*' element={ <Navigate to='/' />} />
+
+                
+                </>
+
+
+            )
         } 
 
-        <Route path='/*' element={ <Navigate to='/auth/login' />} />
+        
 
     </Routes>
   )
