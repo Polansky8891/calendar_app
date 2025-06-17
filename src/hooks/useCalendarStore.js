@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import { onAddNewEvent, onDeleteEvent, onSetActiveEvent, onUpdateEvent } from "../store/calendar/calendarSlice";
+import { onAddNewEvent, onDeleteEvent, onLoadEvents, onSetActiveEvent, onUpdateEvent } from "../store/calendar/calendarSlice";
 import calendarApi from "../api/calendarApi";
 import { converttEventsToDateEvents } from "../helpers/converttEventsToDateEvents";
 
@@ -30,7 +30,7 @@ export const useCalendarStore = () => {
             const { data } = await calendarApi.post('/events', calendarEvent);
 
 
-            dispatch( onAddNewEvent({ ...calendarEvent, id: data.evento.id, user } ) );
+            dispatch( onAddNewEvent({ ...calendarEvent, _id: data.evento.id, user } ) );
         }
     }
 
@@ -42,6 +42,7 @@ export const useCalendarStore = () => {
         try {
             const { data } = await calendarApi.get('/events');
             const events = converttEventsToDateEvents( data.eventos );
+            dispatch( onLoadEvents( events ));
             console.log( events );
             
         } catch (error) {
