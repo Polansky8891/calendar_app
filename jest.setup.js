@@ -1,3 +1,8 @@
+import { TextEncoder, TextDecoder } from 'util';
+
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
+
 // En caso de necesitar la implementación del FetchAPI
 // yarn add -D whatwg-fetch
 // import 'whatwg-fetch'; 
